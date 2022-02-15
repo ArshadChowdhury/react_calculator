@@ -1,1 +1,2 @@
-# react_calculator
+# React Calculator
+## This is a react calculator built from scratch
