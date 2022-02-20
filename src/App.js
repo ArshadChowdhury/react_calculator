@@ -31,7 +31,7 @@ function reducer(state, { type, payload }) {
         return state;
       }
       // this If statement makes sure to not add multiple . in the beginning or later
-      if (payload.digit === "." && state.currentOperand.includes(".")) {
+      if (payload.digit === "." && state.currentOperand?.includes(".")) {
         return state;
       }
       // if other If statements doesn't apply to it thn here it returns updated state with new digit
@@ -164,7 +164,6 @@ function App() {
 
   return (
     <>
-    // telling people about me a little + linking the code to here.
       <div className="description">
         Hello Everyone, I'm Arshad, I built this react calculator from scratch
         with Math Logic built here, no libraries to handle the calculation.{" "}
@@ -189,7 +188,6 @@ function App() {
         <button onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}>
           DEL
         </button>
-        // importing all these buttons at top from other functional components thn passing digit properties
         <OperationButtons operation="÷" dispatch={dispatch} />
         <DigitButtons digit="1" dispatch={dispatch} />
         <DigitButtons digit="2" dispatch={dispatch} />
