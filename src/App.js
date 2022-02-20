@@ -45,7 +45,7 @@ function reducer(state, { type, payload }) {
       if (state.currentOperand == null && state.previousOperand == null) {
         return state;
       }
-      // if the current operand is null thn it returns the current state with operation symbol
+      // if the user mistakenly puts a wrong operation in it'll overwrite the operation symbol here
       if (state.currentOperand == null) {
         return {
           ...state,
@@ -71,7 +71,7 @@ function reducer(state, { type, payload }) {
     // this is the all clear (AC) button's action pressing it will return empty object by clearing everything
     case ACTIONS.CLEAR:
       return {};
-
+    // this part is for deleting the last digit from the current operand
     case ACTIONS.DELETE_DIGIT:
       if (state.overwrite) {
         return {
@@ -80,21 +80,23 @@ function reducer(state, { type, payload }) {
           overwrite: false,
         };
       }
-
+      // if current operand is null then the delete button will return state so basically do nothing
       if (state.currentOperand == null) return state;
+      // but if it has 1 digit in there it'll set to null
       if (state.currentOperand.length === 1) {
         return {
           ...state,
           currentOperand: null,
         };
       }
-
+      // .slice function to clear the last digit from current operand
       return {
         ...state,
         currentOperand: state.currentOperand.slice(0, -1),
       };
-
+    // this is the action call of = from the calculator
     case ACTIONS.EVALUATE:
+      // if the state operation,current,previous operand is null return state( do nothing )
       if (
         state.operation == null ||
         state.currentOperand == null ||
@@ -102,6 +104,7 @@ function reducer(state, { type, payload }) {
       ) {
         return state;
       }
+      // if it's not null overwrite previous states & set operation and prev,current operand to null
       return {
         ...state,
         overwrite: true,
@@ -153,6 +156,7 @@ function formatOperand(operand) {
 }
 
 function App() {
+  // defining hook at the top of the main function component
   const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(
     reducer,
     {}
