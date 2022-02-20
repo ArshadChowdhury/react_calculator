@@ -1,8 +1,11 @@
+// importing components, hook & css
 import { useReducer } from "react";
 import DigitButtons from "./DigitButtons";
 import OperationButtons from "./OperationButtons";
 import "./styles.css";
 
+
+// Defining the Actions here
 export const ACTIONS = {
   ADD_DIGIT: "add-digit",
   CHOOSE_OPERATION: "choose-operation",
@@ -11,7 +14,9 @@ export const ACTIONS = {
   EVALUATE: "evaluate",
 };
 
+// This is the function that gets passed in useReducer below
 function reducer(state, { type, payload }) {
+  // Switch statement to determine cases & actions
   switch (type) {
     case ACTIONS.ADD_DIGIT:
       if (state.overwrite) {
@@ -21,30 +26,33 @@ function reducer(state, { type, payload }) {
           overwrite: false,
         };
       }
-
+      // this If statement checks if the calculator only has 0 currently & if it on;y has 0, it doesn't let you add more 0's
       if (payload.digit === "0" && state.currentOperand === "0") {
         return state;
       }
+      // this If statement makes sure to not add multiple . in the beginning or later
       if (payload.digit === "." && state.currentOperand.includes(".")) {
         return state;
       }
+      // if other If statements doesn't apply to it thn here it returns updated state with new digit
       return {
         ...state,
         currentOperand: `${state.currentOperand || ""}${payload.digit}`,
       };
-
+      // this part of the code helps to choose operations of the calculator.
     case ACTIONS.CHOOSE_OPERATION:
+      // here if the current state is null or previous operand is null just return the state as it is, can't add only operation symbols
       if (state.currentOperand == null && state.previousOperand == null) {
         return state;
       }
-
+      // if the current operand is null thn it returns the current state with operation symbol
       if (state.currentOperand == null) {
         return {
           ...state,
           operation: payload.operation,
         };
       }
-
+      // this part makes the previous operand as current operand also adds the operation symbol
       if (state.previousOperand == null) {
         return {
           ...state,
@@ -53,14 +61,14 @@ function reducer(state, { type, payload }) {
           currentOperand: null,
         };
       }
-
+      // when we're entering a new digit, the previous two digits need to be calculated & displayed as previous operand, this part handles that
       return {
         ...state,
         previousOperand: evaluate(state),
         currentOperand: null,
         operation: payload.operation,
       };
-
+    // this is the all clear (AC) button's action pressing it will return empty object by clearing everything
     case ACTIONS.CLEAR:
       return {};
 
@@ -103,14 +111,15 @@ function reducer(state, { type, payload }) {
       };
   }
 }
-
+// this part does the calculation
 function evaluate({ currentOperand, previousOperand, operation }) {
+  // everything were passed as a string previously now we're making them integer here
   const prev = parseFloat(previousOperand);
   const current = parseFloat(currentOperand);
-
+  // checking whether if operands are number or not if not there'll be no calculation
   if (isNaN(prev) || isNaN(current)) return "";
   let computation = "";
-
+  // another switch statement to calculate as per different operation symbol selected
   switch (operation) {
     case "+":
       computation = prev + current;
@@ -128,7 +137,7 @@ function evaluate({ currentOperand, previousOperand, operation }) {
 
   return computation.toString();
 }
-
+// adding , after 3 digits to make it easier to count
 const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
   maximumFractionDigits: 0,
 });
