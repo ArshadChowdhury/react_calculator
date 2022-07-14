@@ -1,6 +1,6 @@
 # React Calculator
 ## I built a react calculator from scratch with REACT
-## It has reusable component as I've used button component many many times
+## It has reusable component as I've used button component many many times now
 ### It also have some hooks & math logic built in here
 ## Here's a preview of the app :
 
